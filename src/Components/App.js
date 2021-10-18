@@ -1,4 +1,9 @@
 import React, { Component } from 'react'
+import s from './s.module.css'
+import FeedbackOptions from './FeedbackOptions'
+import Notification from './Notification'
+import Section from './Section'
+import Statistics from './Statistics'
 
 class App extends Component {
   state = { good: 0, neutral: 0, bad: 0 }
@@ -34,31 +39,39 @@ class App extends Component {
 
   render() {
     return (
-      <>
-        <h2>Please leave feedback</h2>
-        <button type="button" onClick={this.onClickGood}>
-          Good
-        </button>
-        <button type="button" onClick={this.onClickNeutral}>
-          Neutral
-        </button>
-        <button type="button" onClick={this.onClickBad}>
-          Bad
-        </button>
-        <p>Statistics</p>
-        <p>Good: {this.state.good}</p>
-        <p>Neutral: {this.state.neutral}</p>
-        <p>Bad: {this.state.bad}</p>
-        {!!this.countTotalFeedback() && (
+      <section className={s.section}>
+        <>
+          <Section title="Please leave feedback"></Section>
+          <FeedbackOptions
+            good={this.onClickGood}
+            neutral={this.onClickNeutral}
+            bad={this.onClickBad}
+          />
           <>
-            <p>Total: {this.countTotalFeedback()}</p>
-            <p>
-              Positive feedback:{' '}
-              {this.countPositiveFeedbackPercentage().toFixed(0)}%
-            </p>
+            {!!this.countTotalFeedback() && (
+              <>
+                <Notification message="No feedback given"></Notification>
+                <Section title="Statistics"></Section>
+                <Statistics
+                  good={this.state.good}
+                  neutral={this.state.neutral}
+                  bad={this.state.bad}
+                  total={this.countTotalFeedback()}
+                  positivePercentage={this.countPositiveFeedbackPercentage().toFixed(
+                    1,
+                  )}
+                />
+              </>
+            )}
+            {!this.countTotalFeedback() && (
+              <Notification
+                title="No feedback given"
+                message="No feedback given"
+              ></Notification>
+            )}
           </>
-        )}
-      </>
+        </>
+      </section>
     )
   }
 }
